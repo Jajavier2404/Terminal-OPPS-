@@ -1,10 +1,3 @@
-#El Shell Interactivo (REPL) para el Sistema Operativo Simulado.
-
-#Este módulo proporciona la interfaz de usuario principal para interactuar con el simulador.
-#Utiliza la biblioteca `rich` para una presentación de texto enriquecida y amigable.
-
-
-
 from scheduler import Scheduler
 from memory import MemoryManager
 from filesystem import FileSystem
@@ -53,44 +46,61 @@ def print_horizontal_gradient(ascii_art, start_color=(0, 255, 0), end_color=(0, 
         console.print(gradient)
 
 # ===============================
-# HELP en formato tabla
+# HELP en paneles divididos
 # ===============================
 def help_text():
-    """Genera y retorna un panel de ayuda con una tabla de comandos."""
-    print("\n")
-    table = Table(title="Comandos disponibles", show_header=True, header_style="bold cyan")
-    table.add_column("Comando", style="bold green")
-    table.add_column("Descripción", style="white")
+    """Genera paneles de ayuda divididos por categorías."""
+    panels = []
 
-    # Comandos de Procesos y Planificador
-    table.add_row("newproc <pid> <cpu> <mem>", "Crea un nuevo proceso")
-    table.add_row("ps", "Lista los procesos y su estado")
-    table.add_row("kill <pid>", "Termina un proceso")
-    table.add_row("run", "Ejecuta el planificador Round-Robin")
+    # --- Procesos y Planificador ---
+    table_proc = Table(title="Procesos y Planificador", show_header=True, header_style="bold cyan")
+    table_proc.add_column("Comando", style="bold green")
+    table_proc.add_column("Descripción", style="white")
+    table_proc.add_row("newproc <pid> <cpu> <mem>", "Crea un nuevo proceso")
+    table_proc.add_row("ps", "Lista los procesos y su estado")
+    table_proc.add_row("kill <pid>", "Termina un proceso")
+    table_proc.add_row("run", "Ejecuta el planificador Round-Robin")
+    panels.append(Panel.fit(table_proc, border_style="cyan"))
 
-    # Comandos de Sincronización
-    table.add_row("lock <pid> <res>", "Un proceso adquiere un cerrojo (mutex)")
-    table.add_row("unlock <pid> <res>", "Un proceso libera un cerrojo")
+    # --- Sincronización ---
+    table_sync = Table(title="Sincronización", show_header=True, header_style="bold cyan")
+    table_sync.add_column("Comando", style="bold green")
+    table_sync.add_column("Descripción", style="white")
+    table_sync.add_row("lock <pid> <res>", "Un proceso adquiere un cerrojo (mutex)")
+    table_sync.add_row("unlock <pid> <res>", "Un proceso libera un cerrojo")
+    panels.append(Panel.fit(table_sync, border_style="cyan"))
 
-    # Comandos de Memoria
-    table.add_row("alloc <pid> <size>", "Asigna memoria a un proceso")
-    table.add_row("free <pid>", "Libera la memoria de un proceso")
-    table.add_row("memmap", "Muestra el mapa de memoria actual")
-    table.add_row("defrag", "Compacta la memoria para unir bloques libres")
+    # --- Memoria ---
+    table_mem = Table(title="Gestión de Memoria", show_header=True, header_style="bold cyan")
+    table_mem.add_column("Comando", style="bold green")
+    table_mem.add_column("Descripción", style="white")
+    table_mem.add_row("alloc <pid> <size>", "Asigna memoria a un proceso")
+    table_mem.add_row("free <pid>", "Libera la memoria de un proceso")
+    table_mem.add_row("memmap", "Muestra el mapa de memoria actual")
+    table_mem.add_row("defrag", "Compacta la memoria para unir bloques libres")
+    panels.append(Panel.fit(table_mem, border_style="cyan"))
 
-    # Comandos de Sistema de Archivos
-    table.add_row("ls", "Lista el contenido del directorio actual")
-    table.add_row("mkdir <dirname>", "Crea un nuevo directorio")
-    table.add_row("touch <filename>", "Crea un nuevo archivo vacío")
-    table.add_row("write <file> <content>", "Escribe contenido en un archivo")
-    table.add_row("cat <file>", "Muestra el contenido de un archivo")
+    # --- Sistema de Archivos ---
+    table_fs = Table(title="Sistema de Archivos", show_header=True, header_style="bold cyan")
+    table_fs.add_column("Comando", style="bold green")
+    table_fs.add_column("Descripción", style="white")
+    table_fs.add_row("ls", "Lista el contenido del directorio actual")
+    table_fs.add_row("mkdir <dirname>", "Crea un nuevo directorio")
+    table_fs.add_row("touch <filename>", "Crea un nuevo archivo vacío")
+    table_fs.add_row("write <file> <content>", "Escribe contenido en un archivo")
+    table_fs.add_row("cat <file>", "Muestra el contenido de un archivo")
+    panels.append(Panel.fit(table_fs, border_style="cyan"))
 
-    # Comandos Generales
-    table.add_row("demo", "Ejecuta un escenario de demostración")
-    table.add_row("help", "Muestra esta ayuda")
-    table.add_row("exit", "Sale del simulador")
+    # --- Generales ---
+    table_general = Table(title="Comandos Generales", show_header=True, header_style="bold cyan")
+    table_general.add_column("Comando", style="bold green")
+    table_general.add_column("Descripción", style="white")
+    table_general.add_row("demo", "Ejecuta un escenario de demostración")
+    table_general.add_row("help", "Muestra esta ayuda")
+    table_general.add_row("exit", "Sale del simulador")
+    panels.append(Panel.fit(table_general, border_style="cyan"))
 
-    return Panel.fit(table, border_style="cyan", title="Ayuda", title_align="left")
+    return panels
 
 # ===============================
 # SHELL PRINCIPAL (REPL)
@@ -115,9 +125,10 @@ def run_shell(scheduler: Scheduler, memory: MemoryManager, fs: FileSystem):
         cmd = parts[0].lower()
         args = parts[1:]
 
-        # --- Dispatch de Comandos ---
+        # --- Help ---
         if cmd == 'help':
-            console.print(help_text())
+            for panel in help_text():
+                console.print(panel)
 
         # --- Comandos de Proceso ---
         elif cmd == 'newproc':

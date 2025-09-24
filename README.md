@@ -508,8 +508,28 @@ Terminal-OPPS> newproc D 1 40
 *Interfaz principal del simulador mostrando la ejecución de comandos*
 
 ### Menú de ayuda
-![Menú de ayuda completo](assets/image-2.png)
+
 *Menú de ayuda mostrando todos los comandos disponibles organizados por categorías*
+
+#### Comandos Generales
+![Comandos Generales](assets/tablas/Comandos%20Generales.png)
+*Comandos para controlar el simulador, ejecutar demostraciones y obtener ayuda.*
+
+#### Procesos y Planificador
+![Procesos y Planificador](assets/tablas/Procesos%20y%20Planificador.png)
+*Comandos para crear, listar, y terminar procesos, así como para ejecutar el planificador.*
+
+#### Gestión de Memoria
+![Gestión de Memoria](assets/tablas/Gestión%20de%20Memoria.png)
+*Comandos para asignar, liberar, y visualizar el estado de la memoria.*
+
+#### Sistema de Archivos
+![Sistema de Archivos](assets/tablas/Sistema%20de%20Archivos.png)
+*Comandos para interactuar con el sistema de archivos, como listar, crear, y modificar archivos y directorios.*
+
+#### Sincronización
+![Sincronización](assets/tablas/Sincronización.png)
+*Comandos para gestionar bloqueos (mutex) y proteger recursos compartidos.*
 
 ---
 
